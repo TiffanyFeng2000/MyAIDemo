@@ -632,7 +632,7 @@ function showResult() {
     
     // 显示角色头像（如果有图片）
     const avatarContainer = document.getElementById('character-avatar');
-    const avatarPath = `image/${resultChar.name}.PNG`;
+    const avatarPath = `${resultChar.name}.PNG`;
     
     // 检查图片是否存在
     const img = new Image();
