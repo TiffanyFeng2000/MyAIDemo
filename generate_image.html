@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script>
+        // 生成图片并保存到本地
+        async function saveImage() {
+            const prompt = "book page background with decorative golden border, stars, geometric patterns, light beige color, elegant design, suitable for quiz questions";
+            const url = `https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=${encodeURIComponent(prompt)}&image_size=landscape_16_9`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to generate image');
+                
+                const blob = await response.blob();
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    console.log('Image generated successfully');
+                    console.log('URL:', e.target.result);
+                    // 这里我们需要手动保存图片，因为浏览器安全限制
+                    // 用户需要右键保存图片到 image/book_page_bg.png
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100%';
+                    document.body.appendChild(img);
+                    document.body.innerHTML += '<p>请右键点击图片，选择"另存为"，保存到 image/book_page_bg.png</p>';
+                };
+                
+                reader.readAsDataURL(blob);
+            } catch (error) {
+                console.error('Error:', error);
+                document.body.innerHTML = '<p>图片生成失败，请稍后重试</p>';
+            }
+        }
+        
+        saveImage();
+    </script>
+</body>
+</html>

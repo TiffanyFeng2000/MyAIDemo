@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄金裔性格测试 - 崩坏：星穹铁道</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <div id="start-screen" class="screen active">
+            <div class="book-container">
+                <div class="book" id="magic-book">
+                    <img src="image/图片1.png" class="book-cover" alt="黄金裔性格测试">
+                    <img src="image/图层 1.png" class="book-inside" alt="内页">
+                </div>
+            </div>
+        </div>
+
+        <div id="question-screen" class="screen">
+            <div class="star-rail-border">
+                <div class="screen-content">
+                    <div class="corner-decoration top-left"></div>
+                    <div class="corner-decoration top-right"></div>
+                    <div class="corner-decoration bottom-left"></div>
+                    <div class="corner-decoration bottom-right"></div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-page">
+                        <img src="image/3.5.png" class="book-background" alt="书页背景">
+                        <div class="page-flip" id="page-flip"></div>
+                        <div class="page-content">
+                            <div class="left-page">
+                                <div class="question-number" id="question-number">问题 1 / 40</div>
+                                <div class="question-text" id="question-text"></div>
+                            </div>
+                            <div class="right-page">
+                                <div class="options-container" id="options-container"></div>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <div class="star-rail-border">
+                <div class="screen-content">
+                    <div class="corner-decoration top-left"></div>
+                    <div class="corner-decoration top-right"></div>
+                    <div class="corner-decoration bottom-left"></div>
+                    <div class="corner-decoration bottom-right"></div>
+                    
+                    <div class="book-page">
+                        <img src="image/3.5.png" class="book-background" alt="书页背景">
+                        <div class="page-content">
+                            <div class="left-page">
+                                <div class="result-title">你的黄金裔人格是</div>
+                                <div class="character-avatar" id="character-avatar"></div>
+                                <div class="match-score" id="match-score"></div>
+                            </div>
+                            <div class="right-page">
+                                <div class="character-title" id="character-title"></div>
+                                <div class="result-description" id="result-description"></div>
+                                <div class="character-traits" id="character-traits"></div>
+                                <div class="dimension-analysis" id="dimension-analysis"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <div class="disclaimer">
+        <p>免责声明：本网站仅用于非商业娱乐目的。所有角色版权归米哈游公司所有。</p>
+    </div>
+</body>
+</html>
