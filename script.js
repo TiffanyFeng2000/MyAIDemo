@@ -474,6 +474,8 @@ function startQuiz() {
     setTimeout(() => {
         document.getElementById('start-screen').classList.remove('active');
         document.getElementById('question-screen').classList.add('active');
+        // 初始化答题卡和导航按钮
+        initQuestionScreen();
         showQuestion();
     }, 800);
 }
@@ -496,6 +498,9 @@ function showQuestion() {
         btn.onclick = () => selectOption(option, index);
         optionsContainer.appendChild(btn);
     });
+    
+    // 更新答题卡
+    updateAnswerCard();
 }
 
 function selectOption(option, index) {
@@ -522,7 +527,18 @@ function selectOption(option, index) {
     // Auto advance to next question after animation
     setTimeout(() => {
         pageFlip.classList.remove('flipping');
-        nextQuestion();
+        
+        // 检查是否还有未回答的问题
+        const hasUnansweredQuestions = userSelections.some(selection => selection === null);
+        
+        // 如果当前是最后一题且所有问题都已回答，才显示结果
+        if (currentQuestion === questions.length - 1 && !hasUnansweredQuestions) {
+            showResult();
+        } else if (currentQuestion < questions.length - 1) {
+            // 否则，继续下一题
+            nextQuestion();
+        }
+        // 如果是最后一题但还有未回答的问题，不做任何操作，让用户继续回答
     }, 600);
 }
 
@@ -554,35 +570,97 @@ function prevQuestion() {
     }
 }
 
+// 初始化答题卡
+function initAnswerCard() {
+    const answerCardGrid = document.getElementById('answer-card-grid');
+    answerCardGrid.innerHTML = '';
+    
+    for (let i = 0; i < questions.length; i++) {
+        const item = document.createElement('div');
+        item.className = 'answer-card-item';
+        item.textContent = i + 1;
+        item.onclick = () => goToQuestion(i);
+        answerCardGrid.appendChild(item);
+    }
+    
+    // 添加点击事件处理
+    const answerCardButton = document.getElementById('answer-card-button');
+    answerCardButton.addEventListener('click', function() {
+        this.classList.toggle('active');
+    });
+    
+    // 点击其他地方关闭答题卡
+    document.addEventListener('click', function(event) {
+        const answerCardButton = document.getElementById('answer-card-button');
+        const answerCardDropdown = document.getElementById('answer-card-dropdown');
+        
+        if (!answerCardButton.contains(event.target) && !answerCardDropdown.contains(event.target)) {
+            answerCardButton.classList.remove('active');
+        }
+    });
+}
+
+// 更新答题卡状态
+function updateAnswerCard() {
+    const items = document.querySelectorAll('.answer-card-item');
+    items.forEach((item, index) => {
+        item.classList.remove('active', 'answered');
+        
+        if (index === currentQuestion) {
+            item.classList.add('active');
+        }
+        
+        if (userSelections[index] !== null) {
+            item.classList.add('answered');
+        }
+    });
+}
+
+// 跳转到指定问题
+function goToQuestion(questionIndex) {
+    if (questionIndex >= 0 && questionIndex < questions.length) {
+        const pageFlip = document.getElementById('page-flip');
+        pageFlip.classList.add('flipping');
+        
+        setTimeout(() => {
+            pageFlip.classList.remove('flipping');
+            currentQuestion = questionIndex;
+            showQuestion();
+        }, 600);
+    }
+}
+
+// 初始化导航按钮
+function initNavButtons() {
+    document.getElementById('prev-btn').addEventListener('click', prevQuestion);
+    document.getElementById('next-btn').addEventListener('click', nextQuestion);
+}
+
 function showResult() {
     document.getElementById('question-screen').classList.remove('active');
     document.getElementById('result-screen').classList.add('active');
     
     let maxScore = -1;
+    let secondMaxScore = -1;
     let resultChar = characters[0];
+    let secondChar = characters[1];
     
     characters.forEach(char => {
         if (scores[char.name] > maxScore) {
+            secondMaxScore = maxScore;
+            secondChar = resultChar;
             maxScore = scores[char.name];
             resultChar = char;
+        } else if (scores[char.name] > secondMaxScore && scores[char.name] < maxScore) {
+            secondMaxScore = scores[char.name];
+            secondChar = char;
         }
     });
     
-    // 计算总分数和平均分
-    let totalScore = 0;
-    characters.forEach(char => {
-        totalScore += scores[char.name];
-    });
-    
-    const averageScore = totalScore / characters.length;
-    
-    // 计算匹配度（相对优势法：(最高分 - 平均分) / 最高分 × 100%）
-    let matchPercentage = maxScore > 0 
-        ? Math.round(((maxScore - averageScore) / maxScore) * 100) 
-        : 0;
-    
-    // 确保匹配度不低于75%
-    matchPercentage = Math.max(matchPercentage, 75);
+    // 如果没有第二人格（所有分数相同），选择第二个角色作为默认
+    if (secondMaxScore === -1) {
+        secondChar = characters[1];
+    }
     
     // 计算各维度命中情况
     const dimensions = {
@@ -645,15 +723,27 @@ function showResult() {
     };
     img.src = avatarPath;
     
-    // 显示匹配度
+    // 显示第二人格
     const matchScoreContainer = document.getElementById('match-score');
+    const secondAvatarPath = `image/${secondChar.name}.PNG`;
+    
     matchScoreContainer.innerHTML = `
-        <div class="score-label">匹配度</div>
-        <div class="score-value">${matchPercentage}%</div>
-        <div class="score-bar">
-            <div class="score-bar-fill" style="width: ${matchPercentage}%"></div>
+        <div class="score-label">你的第二黄金裔人格是</div>
+        <div class="second-avatar-container">
+            <div class="second-avatar" id="second-avatar"></div>
         </div>
     `;
+    
+    // 检查第二人格图片是否存在
+    const secondImg = new Image();
+    secondImg.onload = function() {
+        document.getElementById('second-avatar').innerHTML = `<img src="${secondAvatarPath}" alt="${secondChar.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+    };
+    secondImg.onerror = function() {
+        // 如果图片不存在，显示emoji
+        document.getElementById('second-avatar').innerHTML = `<span style="font-size: 3rem;">${secondChar.emoji}</span>`;
+    };
+    secondImg.src = secondAvatarPath;
     
     document.getElementById('character-title').textContent = resultChar.title;
     document.getElementById('result-description').textContent = resultChar.description;
@@ -705,6 +795,12 @@ function restartQuiz() {
 function init() {
     document.getElementById('magic-book').addEventListener('click', startQuiz);
     document.getElementById('restart-btn').addEventListener('click', restartQuiz);
+}
+
+// 在显示问题屏幕时初始化答题卡和导航按钮
+function initQuestionScreen() {
+    initAnswerCard();
+    initNavButtons();
 }
 
 if (document.readyState === 'loading') {
