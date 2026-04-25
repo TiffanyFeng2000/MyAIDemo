@@ -50,6 +50,14 @@
                         <img src="image/3.5.png" class="book-background" alt="书页背景">
                         <div class="page-flip" id="page-flip"></div>
                         <div class="page-content">
+                            <!-- 答题卡按钮 -->
+                            <div class="answer-card-button" id="answer-card-button">
+                                <span>答题卡</span>
+                                <div class="answer-card-dropdown" id="answer-card-dropdown">
+                                    <div class="answer-card-grid" id="answer-card-grid"></div>
+                                </div>
+                            </div>
+                            
                             <div class="left-page">
                                 <div class="question-number" id="question-number">问题 1 / 40</div>
                                 <div class="question-text" id="question-text"></div>
@@ -57,9 +65,13 @@
                             <div class="right-page">
                                 <div class="options-container" id="options-container"></div>
                             </div>
+                            
+                            <!-- 导航按钮 -->
+                            <div class="nav-buttons">
+                                <button class="nav-btn prev-btn" id="prev-btn"></button>
+                                <button class="nav-btn next-btn" id="next-btn"></button>
+                            </div>
                         </div>
-                        
-
                     </div>
                 </div>
             </div>
@@ -79,13 +91,13 @@
                             <div class="left-page">
                                 <div class="result-title">你的黄金裔人格是</div>
                                 <div class="character-avatar" id="character-avatar"></div>
-                                <div class="match-score" id="match-score"></div>
+                                <div class="dimension-analysis" id="dimension-analysis"></div>
                             </div>
                             <div class="right-page">
                                 <div class="character-title" id="character-title"></div>
                                 <div class="result-description" id="result-description"></div>
                                 <div class="character-traits" id="character-traits"></div>
-                                <div class="dimension-analysis" id="dimension-analysis"></div>
+                                <div class="match-score" id="match-score"></div>
                             </div>
                         </div>
                     </div>
